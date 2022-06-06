@@ -1,0 +1,15 @@
+{
+  "name": "local-file-server",
+  "version": "1.0.0",
+  "description": "Serve files from directory to local network",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}

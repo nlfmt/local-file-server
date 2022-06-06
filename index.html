@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Server</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="navigation">
+            <div id="up-btn">
+                <i data-feather="arrow-up"></i>
+            </div>
+            <span id="path"></span>
+            <span id="home"><i data-feather="home"></i></span>
+        </h1>
+        <div id="shadow"></div>
+        <div class="files">
+        </div>
+    </div>
+
+    <script>
+        // Get the current URL to load the files from api
+        const dirUrl = location.pathname;
+        document.getElementById('path').innerText = decodeURI(dirUrl);
+
+        document.getElementById('up-btn').addEventListener('click', () => {
+            location.href = dirUrl.replace(/\/[^\/]+\/?$/gm, "") || "/";
+        });
+        document.getElementById('home').addEventListener('click', () => {
+            location.href = "/";
+        });
+
+        const q = new URLSearchParams({path: location.pathname});
+        fetch(`/api/files?${q.toString()}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(res => {
+            if (res.ok) {
+                return res.json();
+            } else return {};
+        }).then(d => {
+            if (!d.dirs) return feather.replace(); // Directory doesnt exist
+            const filesDiv = document.querySelector(".files");
+
+            d.dirs.forEach(dir => {
+                let el = document.createElement("div");
+                el.className = "dir";
+                let href = `${dirUrl}/${dir}`.replace(/\/+/g, "/");
+                el.innerHTML = `
+                <i data-feather="folder"></i>
+                <a href="${href}">${dir}</a>
+                `;
+                filesDiv.appendChild(el);
+            });
+            
+            d.files.forEach(file => {
+                let el = document.createElement("div");
+                el.className = "file";
+                let href = `${dirUrl}/${file}`.replace(/\/+/g, "/");
+                el.innerHTML = `
+                    <i data-feather="file-text"></i>
+                    <a download href="${href}">${file}</a>
+                `;
+                filesDiv.appendChild(el);
+            });
+            // Load feather icons
+            feather.replace();
+
+            // add padding to scroll bar
+            const resize = () => {
+                if (filesDiv.scrollHeight > filesDiv.clientHeight) {
+                    filesDiv.style.paddingRight = "10px";
+                } else {
+                    filesDiv.style.paddingRight = "0px";
+                }
+            }
+            window.addEventListener("resize", resize);
+            resize();
+
+            // Show shadow when scrolling
+            filesDiv.addEventListener("scroll", () => {
+                if (filesDiv.scrollTop == 0) {
+                    document.getElementById("shadow").style.zIndex = "1";
+                } else {
+                    document.getElementById("shadow").style.zIndex = "3";
+                }
+            })
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            color: rgb(182, 201, 224);
+        }
+        body {
+            min-height: 100vh;
+            background-color: #232c39;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: min(100vw, 1000px);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .navigation {
+            display: flex;
+            align-items: center;
+            background-color: #343f4e;
+            border-radius: 5px;
+            height: 45px;
+            z-index: 4;
+        }
+        #up-btn {
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            height: 45px;
+            width: 45px;
+            border-radius: 5px 0 0 5px;
+            background-color: rgb(64, 117, 191);
+        }
+        #home {
+            display: grid;
+            place-items: center;
+            width: 45px;
+            height: 45px;
+            flex-shrink: 0;
+            background-color: rgb(64, 117, 191);
+            border-radius: 0 5px 5px 0;
+        }
+        #home:hover, #up-btn:hover {
+            filter: brightness(0.9);
+        }
+        #path {
+            padding: 0 10px;
+            margin-right: auto;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            direction: rtl;
+        }
+        .files {
+            z-index: 2;
+            height: calc(100vh - 85px);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 10px;
+            overflow-y: auto;
+        }
+        .files > div {
+            background: #4b5a6e;
+            border-radius: 5px;
+            display: flex;
+            align-items: stretch;
+        }
+        .files > .file {
+            background: #3e4a5a;
+        }
+        .files > div:hover {
+            filter: brightness(1.1);
+        }
+        .files > div > svg {
+            margin: 10px;
+            flex-shrink: 0;
+        }
+        #shadow {
+            z-index: 1;
+            height: 10px;
+            background-color: #232c39;
+            box-shadow: 0 0 10px 5px #232c39;
+        }
+        a {
+            padding: 12px 20px 12px 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            text-decoration: none;
+            flex-grow: 1;
+            color:rgb(182, 201, 224);
+        }
+        a[download] {
+            color:rgb(140, 176, 220);
+        }
+
+        *::-webkit-scrollbar {
+            width: 15px;               /* width of the entire scrollbar */
+            background: none;
+        }
+
+        *::-webkit-scrollbar-track {
+            width: 15px;
+            background: #343f4e;       /* color of the tracking area */
+            border-radius: 5px;       /* roundness of the scroll thumb */
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background-color: #4b5a6e;    /* color of the scroll thumb */
+            border-radius: 5px;       /* roundness of the scroll thumb */
+        }
+    </style>
+</body>
+</html>
