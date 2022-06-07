@@ -15,8 +15,8 @@
 if "%~1"=="-FIXED_CTRL_C" (
    shift
 ) else (
-   call <nul %0 -FIXED_CTRL_C %*
+   call <nul %0 -FIXED_CTRL_C %~dp0 %*
    goto :EOF
 )
 
-node %~dp0\main.js %1 %2
+node %1\..\main.js %2 %3
