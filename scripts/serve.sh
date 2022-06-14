@@ -3,7 +3,8 @@
 # A script to start the file server.
 # Copyright (c) 2022 nlfmt
 
-# To install this script on your system, run the following command:
+# To install this script on your system, run the following commands:
+#     chmod +x serve.sh
 #     ln -s /path/to/this/script/serve.sh /usr/local/bin/serve
 
 # Usage: serve [path] [port]
