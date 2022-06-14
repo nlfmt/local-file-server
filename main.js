@@ -1,8 +1,9 @@
-// Express File Server for lcal network
 // Copyright (c) 2022 nlfmt
+
+// Express File Server for lcal network
 //
-// usage: node main.js [path] [port]
-// or use scripts/serve.bat
+// Usage: node main.js [path] [port]
+// or use scripts from scripts folder
 
 
 const express = require("express");
@@ -53,7 +54,7 @@ app.get("/api/files", (req, res) => {
 });
 
 // Directory view
-app.get("*", (req, res) => {
+app.get("*", (_, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 

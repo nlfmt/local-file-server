@@ -1,1 +1,4 @@
 node_modules
+
+# Directory containg built executables
+build

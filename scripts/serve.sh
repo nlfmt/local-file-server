@@ -1,7 +1,10 @@
 #! /bin/bash
 
-# A script to start the file server.
 # Copyright (c) 2022 nlfmt
+
+# A script to start the file server.
+# This requires you to have node installed and to have installed all modules.
+# If you want to use this program without any of that, use the prebuilt binaries. (https://github.com/nlfmt/local-file-server/releases)
 
 # To install this script on your system, run the following commands:
 #     chmod +x serve.sh
@@ -13,6 +16,7 @@
 # serve C:\Users\nlfmt\Desktop\
 
 
+# resolve original script path from links
 SCRIPT_PATH="${BASH_SOURCE}"
 while [ -L "${SCRIPT_PATH}" ]; do
   SCRIPT_DIR="$(cd -P "$(dirname "${SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
