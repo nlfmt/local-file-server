@@ -1,3 +1,9 @@
+> [!CAUTION]
+> This project contains vulnerabilities, don't use it in uncontrolled environments! \
+> If you run this program on your machine, it exposes an API to download any file on your machine, due to bad path validation. \
+> This project has been rewritten from the ground up with safety and speed in mind, you can find it under [nlfmt/serve](https://github.com/nlfmt/serve). \
+> As a consequence, this repo is no longer being maintained.
+
 # Local File Server
 
 Quickly serve files from a directory to all computers on your local network.\
